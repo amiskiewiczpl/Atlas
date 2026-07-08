@@ -1,11 +1,10 @@
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/Button";
-import { zalogujMagicLink } from "@/lib/actions/auth";
+import { zalogujGoogle } from "@/lib/actions/auth";
 import { createClient } from "@/lib/supabase/server";
 
 type LoginPageProps = {
   searchParams?: {
-    sent?: string;
     error?: string;
     next?: string;
   };
@@ -34,36 +33,16 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         </p>
         <h1 className="mt-3 text-2xl font-semibold">Logowanie</h1>
         <p className="mt-3 text-sm leading-6 text-atlas-secondary">
-          Wpisz email. Dostaniesz link, który otworzy Command Center.
+          Zaloguj się kontem Google, aby od razu przejść do Command Center.
         </p>
 
-        <form action={zalogujMagicLink} className="mt-6 space-y-4">
+        <form action={zalogujGoogle} className="mt-6">
           <input type="hidden" name="next" value={searchParams?.next ?? "/command"} />
 
-          <label className="block">
-            <span className="text-sm font-medium text-atlas-secondary">
-              Email
-            </span>
-            <input
-              required
-              type="email"
-              name="email"
-              autoComplete="email"
-              className="mt-2 h-11 w-full rounded-md border border-atlas-border bg-atlas-panel px-3 text-sm text-atlas-primary outline-none transition placeholder:text-atlas-muted focus:border-atlas-cyan"
-              placeholder="ty@atlas.local"
-            />
-          </label>
-
           <Button type="submit" className="w-full">
-            Wyślij link logowania
+            Zaloguj przez Google
           </Button>
         </form>
-
-        {searchParams?.sent ? (
-          <p className="mt-4 rounded-md border border-atlas-border bg-atlas-panel px-3 py-2 text-sm text-atlas-secondary">
-            Link wysłany. Sprawdź skrzynkę i wróć do Command Center.
-          </p>
-        ) : null}
 
         {searchParams?.error ? (
           <p className="mt-4 rounded-md border border-atlas-red/40 bg-atlas-red/10 px-3 py-2 text-sm text-atlas-primary">

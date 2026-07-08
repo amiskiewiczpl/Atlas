@@ -4,13 +4,8 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
-export async function zalogujMagicLink(formData: FormData) {
-  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+export async function zalogujGoogle(formData: FormData) {
   const next = String(formData.get("next") ?? "/command");
-
-  if (!email) {
-    redirect("/login?error=Brakuje%20adresu%20email");
-  }
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL;
   const origin = appUrl || headers().get("origin") || "http://localhost:3000";
@@ -18,18 +13,18 @@ export async function zalogujMagicLink(formData: FormData) {
   const callbackUrl = new URL("/callback", origin);
   callbackUrl.searchParams.set("next", next);
 
-  const { error } = await supabase.auth.signInWithOtp({
-    email,
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
     options: {
-      emailRedirectTo: callbackUrl.toString()
+      redirectTo: callbackUrl.toString()
     }
   });
 
-  if (error) {
-    redirect(`/login?error=${encodeURIComponent(error.message)}`);
+  if (error || !data?.url) {
+    redirect(`/login?error=${encodeURIComponent(error?.message ?? "Błąd%20logowania")}`);
   }
 
-  redirect("/login?sent=1");
+  redirect(data.url);
 }
 
 export async function wyloguj() {

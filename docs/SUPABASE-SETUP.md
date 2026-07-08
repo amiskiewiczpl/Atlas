@@ -25,6 +25,7 @@ Bez tego nie da się realnie przetestować:
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=...
 NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
 5. Wejdź w `Authentication` → `URL Configuration`.
@@ -35,6 +36,8 @@ Site URL: http://localhost:3000
 Redirect URLs:
 http://localhost:3000/callback
 ```
+
+7. W `Authentication` -> `Providers` włącz Google i podaj dane klienta OAuth.
 
 Po deployu trzeba będzie dodać też adres produkcyjny Vercel.
 
@@ -71,8 +74,8 @@ npm run dev
 http://localhost:3000/login
 ```
 
-3. Wyślij magic link na swój email.
-4. Po wejściu z linku powinieneś trafić na:
+3. Zaloguj się kontem Google.
+4. Po powrocie powinieneś trafić na:
 
 ```text
 /command
