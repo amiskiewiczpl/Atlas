@@ -20,7 +20,7 @@ export type RuchDniaListItem = {
 type RuchyDniaDb = {
   from(table: "domeny"): {
     select(columns: "id, nazwa"): {
-      eq(column: "aktywny", value: true): {
+      eq(column: "aktywna", value: true): {
         order(
           column: "kolejnosc",
           options: { ascending: true }
@@ -52,7 +52,7 @@ export async function getAktywneDomeny() {
   const { data, error } = await supabase
     .from("domeny")
     .select("id, nazwa")
-    .eq("aktywny", true)
+    .eq("aktywna", true)
     .order("kolejnosc", { ascending: true });
 
   if (error) {

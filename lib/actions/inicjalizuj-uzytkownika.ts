@@ -3,14 +3,16 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 
-type InicjalizujAtlasRpc = (
-  fn: "inicjalizuj_atlas_uzytkownika",
-  args: {
-    p_user_id: string;
-    p_email: string | null;
-    p_display_name: string | null;
-  }
-) => Promise<{ error: { message: string } | null }>;
+type InicjalizujAtlasRpc = {
+  rpc: (
+    fn: "inicjalizuj_atlas_uzytkownika",
+    args: {
+      p_user_id: string;
+      p_email: string | null;
+      p_display_name: string | null;
+    }
+  ) => Promise<{ error: { message: string } | null }>;
+};
 
 export async function inicjalizujUzytkownika() {
   const supabase = createClient();
@@ -27,8 +29,7 @@ export async function inicjalizujUzytkownika() {
     throw new Error("Zaloguj się przed inicjalizacją danych startowych.");
   }
 
-  const inicjalizujAtlas = supabase.rpc as unknown as InicjalizujAtlasRpc;
-  const { error } = await inicjalizujAtlas("inicjalizuj_atlas_uzytkownika", {
+  const { error } = await (supabase as any).rpc("inicjalizuj_atlas_uzytkownika", {
     p_user_id: user.id,
     p_email: user.email ?? null,
     p_display_name:

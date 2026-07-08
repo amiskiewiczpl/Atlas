@@ -8,14 +8,16 @@ import type { Database } from "@/types/supabase";
 type StatusCiala = Database["public"]["Enums"]["status_ciala"];
 type StatusGlowy = Database["public"]["Enums"]["status_glowy"];
 
-type InicjalizujAtlasRpc = (
-  fn: "inicjalizuj_atlas_uzytkownika",
-  args: {
-    p_user_id: string;
-    p_email: string | null;
-    p_display_name: string | null;
-  }
-) => Promise<{ error: { message: string } | null }>;
+type InicjalizujAtlasRpc = {
+  rpc: (
+    fn: "inicjalizuj_atlas_uzytkownika",
+    args: {
+      p_user_id: string;
+      p_email: string | null;
+      p_display_name: string | null;
+    }
+  ) => Promise<{ error: { message: string } | null }>;
+};
 
 type DzienUpsert = {
   user_id: string;
@@ -127,8 +129,7 @@ export async function zapiszPorannyBriefing(formData: FormData) {
   const trybDnia = wyznaczTrybDnia(readiness);
   const dzisiaj = new Date().toISOString().slice(0, 10);
 
-  const inicjalizujAtlas = supabase.rpc as unknown as InicjalizujAtlasRpc;
-  const { error: initError } = await inicjalizujAtlas("inicjalizuj_atlas_uzytkownika", {
+  const { error: initError } = await (supabase as any).rpc("inicjalizuj_atlas_uzytkownika", {
     p_user_id: user.id,
     p_email: user.email ?? null,
     p_display_name:
