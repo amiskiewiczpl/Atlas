@@ -1,0 +1,13 @@
+AGENTS.md
+CODEX_START_PROMPT.md
+README.md
+docs/00-kontekst-produktu.md
+docs/01-ux-blueprint.md
+docs/02-architektura-informacji.md
+docs/03-model-bazy.md
+docs/04-flow-uzytkownika.md
+docs/05-design-system.md
+docs/06-plan-implementacji.md
+docs/07-specyfikacja-techniczna.md
+docs/08-backlog.md
+supabase/migrations/0001_atlas_core.sql
