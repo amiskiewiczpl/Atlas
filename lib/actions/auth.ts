@@ -7,8 +7,13 @@ import { createClient } from "@/lib/supabase/server";
 export async function zalogujGoogle(formData: FormData) {
   const next = String(formData.get("next") ?? "/command");
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-  const origin = appUrl || headers().get("origin") || "http://localhost:3000";
+  const originHeader = headers().get("origin");
+  const forwardedProto = headers().get("x-forwarded-proto") || "https";
+  const forwardedHost = headers().get("x-forwarded-host") || headers().get("host");
+  const origin = originHeader || (forwardedHost ? `${forwardedProto}://${forwardedHost}` : process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000")
+  const forwardedProto = headers().get("x-forwarded-proto") || "https";
+  const forwardedHost = headers().get("x-forwarded-host") || headers().get("host");
+  const origin = originHeader || (forwardedHost ? `${forwardedProto}://${forwardedHost}` : process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000");
   const supabase = createClient();
   const callbackUrl = new URL("/callback", origin);
   callbackUrl.searchParams.set("next", next);
