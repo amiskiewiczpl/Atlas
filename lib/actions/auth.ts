@@ -12,12 +12,16 @@ export async function zalogujMagicLink(formData: FormData) {
     redirect("/login?error=Brakuje%20adresu%20email");
   }
 
-  const origin = headers().get("origin") ?? "http://localhost:3000";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+  const origin = appUrl || headers().get("origin") || "http://localhost:3000";
   const supabase = createClient();
+  const callbackUrl = new URL("/callback", origin);
+  callbackUrl.searchParams.set("next", next);
+
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: `${origin}/callback?next=${encodeURIComponent(next)}`
+      emailRedirectTo: callbackUrl.toString()
     }
   });
 
