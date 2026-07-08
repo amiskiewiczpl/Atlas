@@ -37,9 +37,17 @@ Redirect URLs:
 http://localhost:3000/callback
 ```
 
-7. W `Authentication` -> `Providers` włącz Google i podaj dane klienta OAuth.
+7. W `Authentication` → `Providers` włącz Google.
 
-Po deployu trzeba będzie dodać też adres produkcyjny Vercel.
+8. W Google Cloud Console do konfiguracji klienta OAuth dodaj autoryzowany URI przekierowania:
+
+```text
+https://<your-supabase-project>.supabase.co/auth/v1/callback
+```
+
+   Zwykle to jest adres twojego projektu Supabase, np. `https://fisaovbpgchthqoasvet.supabase.co/auth/v1/callback`.
+
+Po deployu trzeba będzie dodać też adres produkcyjny Vercel i zapisać go w Supabase oraz Google Cloud.
 
 ## Migracje
 

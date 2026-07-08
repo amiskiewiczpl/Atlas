@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import type { Database } from "@/types/supabase";
+import type { NextResponse, NextRequest } from "next/server";
 
 type CookieToSet = {
   name: string;
@@ -8,7 +9,7 @@ type CookieToSet = {
   options: CookieOptions;
 };
 
-export function createClient() {
+export function createClient(request?: NextRequest, response?: NextResponse) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -16,7 +17,7 @@ export function createClient() {
     throw new Error("Brakuje zmiennych środowiskowych Supabase dla serwera.");
   }
 
-  const cookieStore = cookies();
+  const cookieStore = request ? request.cookies : cookies();
 
   return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
     cookies: {
@@ -24,6 +25,13 @@ export function createClient() {
         return cookieStore.getAll();
       },
       setAll(cookiesToSet: CookieToSet[]) {
+        if (response) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            response.cookies.set(name, value, options);
+          });
+          return;
+        }
+
         try {
           cookiesToSet.forEach(({ name, value, options }) => {
             cookieStore.set(name, value, options);
