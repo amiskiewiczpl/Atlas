@@ -103,25 +103,25 @@ docs/ROADMAP.md
 
 ### SPRINT-010 — dowody i confidence
 
-- [ ] Utworzyć `/discovery/problemy/[id]/dowody/nowy`.
-- [ ] Dodać dowód.
-- [ ] Dodać confidence score.
-- [ ] Pokazać braki do Kandydat MVP.
-- [ ] Dodać akcję `Zabij problem`.
+- [x] Utworzyć `/discovery/problemy/[id]/dowody/nowy`.
+- [x] Dodać dowód.
+- [x] Dodać confidence score.
+- [x] Pokazać braki do Kandydat MVP.
+- [x] Dodać akcję `Zabij problem`.
 
 ## v0.4 — domeny i weekly review
 
 ### SPRINT-011 — domeny i KPI
 
-- [ ] Dodać LifeRadar.
-- [ ] Dodać LifeHeatmap.
-- [ ] Dodać KPI z regułami decyzyjnymi.
+- [x] Dodać LifeRadar.
+- [x] Dodać LifeHeatmap.
+- [x] Dodać KPI z regułami decyzyjnymi.
 
 ### SPRINT-012 — weekly review
 
-- [ ] Dodać podsumowanie tygodnia.
-- [ ] Dodać korektę strategii.
-- [ ] Dodać wybór głównego ryzyka na kolejny tydzień.
+- [x] Dodać podsumowanie tygodnia.
+- [x] Dodać korektę strategii.
+- [x] Dodać wybór głównego ryzyka na kolejny tydzień.
 
 ## Reguły zakresu
 

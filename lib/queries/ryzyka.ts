@@ -32,6 +32,14 @@ type RyzykaListDb = {
         options: { ascending: false }
       ): Promise<{ data: RyzykoListItem[] | null; error: { message: string } | null }>;
     };
+    select(columns: "id, tytul, powaga"): {
+      eq(column: "status", value: "aktywne"): {
+        order(
+          column: "created_at",
+          options: { ascending: false }
+        ): Promise<{ data: Array<{ id: string; tytul: string; powaga: string }> | null; error: { message: string } | null }>;
+      };
+    };
   };
 };
 
@@ -52,6 +60,21 @@ export async function getRyzyka() {
   const { data, error } = await supabase
     .from("ryzyka")
     .select("id, domena_id, tytul, opis, typ, powaga, status, zrodlo_wyzwolenia, rekomendowany_ruch, created_at")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data ?? [];
+}
+
+export async function getActiveRisks() {
+  const supabase = createClient() as unknown as RyzykaListDb;
+  const { data, error } = await supabase
+    .from("ryzyka")
+    .select("id, tytul, powaga")
+    .eq("status", "aktywne")
     .order("created_at", { ascending: false });
 
   if (error) {

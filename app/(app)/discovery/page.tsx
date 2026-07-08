@@ -22,8 +22,8 @@ export default async function DiscoveryPage() {
                 Problemy rynkowe
               </h1>
               <p className="mt-2 text-sm leading-6 text-atlas-secondary">
-                Discovery przechowuje problemy, nie pomysły. Dowody i confidence
-                dojdą w kolejnym sprincie.
+                Discovery przechowuje problemy, nie pomysły. Dowody, confidence i
+                akcja zabicia problemu są już dostępne w tym sprincie.
               </p>
             </div>
             <Link

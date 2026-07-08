@@ -1,4 +1,4 @@
-import { Activity, Compass, Crosshair, Flag, Moon, ShieldAlert, Target } from "lucide-react";
+import { Activity, Compass, Crosshair, Flag, Moon, ShieldAlert, Target, Radar, CalendarRange } from "lucide-react";
 import Link from "next/link";
 
 const navItems = [
@@ -8,7 +8,9 @@ const navItems = [
   { label: "Debrief", href: "/debrief/wieczorny", icon: Moon },
   { label: "Questy", href: "/questy", icon: Flag },
   { label: "Ryzyka", href: "/ryzyka", icon: ShieldAlert },
-  { label: "Discovery", href: "/discovery", icon: Compass }
+  { label: "Discovery", href: "/discovery", icon: Compass },
+  { label: "Domeny", href: "/domeny", icon: Radar },
+  { label: "Review", href: "/review", icon: CalendarRange }
 ];
 
 export function Sidebar() {

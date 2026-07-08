@@ -18,6 +18,20 @@ npm install
 npm run dev
 ```
 
+## Deployment
+
+Aplikacja jest przygotowana pod Vercel. Po pushu do GitHub:
+
+1. Zaloguj się na Vercel.
+2. Kliknij „Add New Project”.
+3. Wybierz repozytorium Atlas.
+4. W Settings > Environment Variables dodaj:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+5. Włącz deployment.
+
+Dla lokalnego testu utwórz plik `.env.local` na podstawie `.env.example`.
+
 Główna strona aplikacji:
 
 ```text
