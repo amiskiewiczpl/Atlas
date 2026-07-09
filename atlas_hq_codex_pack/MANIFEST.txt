@@ -10,4 +10,6 @@ docs/05-design-system.md
 docs/06-plan-implementacji.md
 docs/07-specyfikacja-techniczna.md
 docs/08-backlog.md
+docs/09-plan-sprintow-i-upgrade.md
 supabase/migrations/0001_atlas_core.sql
+README.md

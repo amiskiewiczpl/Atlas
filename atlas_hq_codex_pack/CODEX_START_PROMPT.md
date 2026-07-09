@@ -10,6 +10,8 @@ Przeczytaj `AGENTS.md` oraz dokumenty w katalogu `docs/`, szczególnie:
 
 Następnie przygotuj plan wdrożenia pierwszego sprintu technicznego dla ATLAS HQ.
 
+> Sprint 2 ma już priorytet: onboarding pierwszego użycia i seed danych startowych dla nowego użytkownika.
+
 Zakres pierwszego sprintu:
 
 1. Utworzenie projektu Next.js + TypeScript.

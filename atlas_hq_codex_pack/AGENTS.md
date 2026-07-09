@@ -67,6 +67,7 @@ Przy bazie danych czytaj:
 Przy UI czytaj:
 
 - `docs/05-design-system.md`
+- `docs/09-plan-sprintow-i-upgrade.md` — aktualny status sprintu i priorytety
 
 Przy flow czytaj:
 

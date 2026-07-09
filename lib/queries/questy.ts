@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/types/supabase";
 
@@ -25,6 +25,12 @@ type QuestyDb = {
     select(
       columns: "id, tytul, opis, typ, status, postep, metryka_sukcesu, nastepna_akcja, bloker, data_cel, created_at"
     ): {
+      eq(column: "user_id", value: string): {
+        order(
+          column: "created_at",
+          options: { ascending: false }
+        ): Promise<{ data: QuestListItem[] | null; error: { message: string } | null }>;
+      };
       order(
         column: "created_at",
         options: { ascending: false }
@@ -39,6 +45,11 @@ type QuestDetailsDb = {
     select(
       columns: "id, tytul, opis, typ, status, postep, metryka_sukcesu, nastepna_akcja, bloker, data_start, data_cel, powod_zabicia, created_at"
     ): {
+      eq(column: "user_id", value: string): {
+        eq(column: "id", value: string): {
+          maybeSingle(): Promise<{ data: QuestDetails | null; error: { message: string } | null }>;
+        };
+      };
       eq(column: "id", value: string): {
         maybeSingle(): Promise<{ data: QuestDetails | null; error: { message: string } | null }>;
       };
@@ -46,13 +57,32 @@ type QuestDetailsDb = {
   };
 };
 
-export async function getQuesty() {
-  const supabase = createClient() as unknown as QuestyDb;
-  const { data, error } = await supabase
+async function getCurrentUser() {
+  const supabase = createClient();
+  const {
+    data: { user },
+    error
+  } = await supabase.auth.getUser();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  return { supabase, user };
+}
+
+export async function getQuesty(): Promise<QuestListItem[]> {
+  const { supabase, user } = await getCurrentUser();
+  const { data, error } = await (supabase as unknown as QuestyDb)
     .from("questy")
     .select(
       "id, tytul, opis, typ, status, postep, metryka_sukcesu, nastepna_akcja, bloker, data_cel, created_at"
     )
+    .eq("user_id", user.id)
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -62,13 +92,14 @@ export async function getQuesty() {
   return data ?? [];
 }
 
-export async function getQuest(id: string) {
-  const supabase = createClient() as unknown as QuestDetailsDb;
-  const { data, error } = await supabase
+export async function getQuest(id: string): Promise<QuestDetails> {
+  const { supabase, user } = await getCurrentUser();
+  const { data, error } = await (supabase as unknown as QuestDetailsDb)
     .from("questy")
     .select(
       "id, tytul, opis, typ, status, postep, metryka_sukcesu, nastepna_akcja, bloker, data_start, data_cel, powod_zabicia, created_at"
     )
+    .eq("user_id", user.id)
     .eq("id", id)
     .maybeSingle();
 

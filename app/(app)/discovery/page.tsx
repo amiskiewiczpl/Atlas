@@ -2,11 +2,12 @@ import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
 import { ProblemCard } from "@/components/discovery/ProblemCard";
 import { getProblemy } from "@/lib/queries/problemy";
+import type { ProblemListItem } from "@/lib/queries/problemy";
 
 export const dynamic = "force-dynamic";
 
 export default async function DiscoveryPage() {
-  const problemy = await getProblemy();
+  const problemy: ProblemListItem[] = await getProblemy();
   const aktywne = problemy.filter((problem) => problem.status !== "zabity");
 
   return (

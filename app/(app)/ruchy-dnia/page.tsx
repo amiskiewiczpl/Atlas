@@ -37,6 +37,14 @@ export default async function RuchyDniaPage() {
             </div>
           </header>
 
+          <AtlasPanel eyebrow="Onboarding" title="Co zrobić teraz">
+            <div className="space-y-3 text-sm text-atlas-secondary">
+              <p>1. Wybierz maksymalnie 3 ruchy, które chcesz realnie wykonać dziś.</p>
+              <p>2. Zmieniaj status tylko wtedy, gdy ruch rozpoczął się lub został odwołany.</p>
+              <p>3. Po aktualizacji wróć do Command Center, aby zobaczyć wpływ na dzień.</p>
+            </div>
+          </AtlasPanel>
+
           <RuchyDniaExecutionList ruchy={ruchy} />
         </div>
 

@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
 import { RyzykoCard } from "@/components/ryzyka/RyzykoCard";
-import { getRyzyka } from "@/lib/queries/ryzyka";
+import { getRyzyka, type RyzykoListItem } from "@/lib/queries/ryzyka";
 
 export const dynamic = "force-dynamic";
 
 export default async function RyzykaPage() {
-  const ryzyka = await getRyzyka();
+  const ryzyka: RyzykoListItem[] = await getRyzyka();
   const aktywne = ryzyka.filter((ryzyko) => ryzyko.status === "aktywne");
 
   return (

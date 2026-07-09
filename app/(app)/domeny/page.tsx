@@ -2,11 +2,15 @@ import { AppShell } from "@/components/layout/AppShell";
 import { LifeHeatmap } from "@/components/domeny/LifeHeatmap";
 import { LifeRadar } from "@/components/domeny/LifeRadar";
 import { getActiveKpis, getDomenySummary } from "@/lib/queries/domeny";
+import type { DomenaViewItem, KpiViewItem } from "@/lib/queries/domeny";
 
 export const dynamic = "force-dynamic";
 
 export default async function DomenyPage() {
-  const [domeny, kpi] = await Promise.all([getDomenySummary(), getActiveKpis()]);
+  const [domeny, kpi]: [DomenaViewItem[], KpiViewItem[]] = await Promise.all([
+    getDomenySummary(),
+    getActiveKpis()
+  ]);
 
   return (
     <AppShell>

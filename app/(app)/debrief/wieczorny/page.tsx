@@ -47,6 +47,14 @@ export default async function WieczornyDebriefPage() {
             </div>
           </header>
 
+        <AtlasPanel eyebrow="Jak zamknąć dzień" title="Zrób debrief">
+          <div className="space-y-3 text-sm text-atlas-secondary">
+            <p>1. Upewnij się, że wszystkie ruchy mają aktualny status.</p>
+            <p>2. Zapisz największy progres i największy problem.</p>
+            <p>3. Dodaj sygnał na jutro, aby następna sesja była bardziej ukierunkowana.</p>
+          </div>
+        </AtlasPanel>
+
           <RuchyDniaExecutionList ruchy={ruchy} />
         </div>
 

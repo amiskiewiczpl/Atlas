@@ -5,6 +5,8 @@ ATLAS HQ to prywatna aplikacja webowa typu osobiste Mission Control.
 Nie jest to task manager, Notion, Trello ani lista zadań.  
 To ma być dashboard decyzji: rano otwieram jeden ekran i wiem, jak grać dzień.
 
+> Aktualny plan w tej paczce obejmuje Sprint 2: onboarding i pierwsze użycie.
+
 ## Jak używać tej paczki w VS Code / Codex
 
 1. Utwórz nowe repo/projekt, np. `atlas-hq`.
@@ -50,5 +52,7 @@ Dopiero potem rozbudowa Discovery, kariery, finansów, zdrowia i sportu.
 - `docs/06-plan-implementacji.md` — backlog i kolejność budowy
 - `docs/07-specyfikacja-techniczna.md` — route’y, foldery, komponenty
 - `docs/08-backlog.md` — backlog z priorytetami
+- `docs/09-plan-sprintow-i-upgrade.md` — plan kolejnych sprintów i upgrade do v0.2
 - `supabase/migrations/0001_atlas_core.sql` — startowa migracja bazy
+- `supabase/migrations/0002_seed_startowy.sql` — seed danych startowych i funkcja inicjalizacji
 

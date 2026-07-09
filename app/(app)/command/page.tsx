@@ -6,6 +6,7 @@ import { MissionPanel } from "@/components/command/MissionPanel";
 import { ProgressBlockerPanel } from "@/components/command/ProgressBlockerPanel";
 import { RiskPanel } from "@/components/command/RiskPanel";
 import { SystemStatusPanel } from "@/components/command/SystemStatusPanel";
+import { AtlasPanel } from "@/components/ui/AtlasPanel";
 import { AppShell } from "@/components/layout/AppShell";
 import { getCommandCenterData } from "@/lib/queries/command-center";
 
@@ -45,6 +46,29 @@ export default async function CommandPage() {
             </div>
           </div>
         </header>
+
+        <AtlasPanel eyebrow="Jak zacząć" title="Kolejne kroki">
+          <div className="space-y-2 text-sm text-atlas-secondary">
+            <p>1. Zacznij od porannego briefingu.</p>
+            <p>2. Ustaw maksymalnie 3 konkretne ruchy dnia.</p>
+            <p>3. Oznacz wykonanie lub pominięcie ruchu w trakcie dnia.</p>
+            <p>4. Zamknij dzień wieczornym debriefem.</p>
+          </div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Link
+              href="/briefing/poranny"
+              className="inline-flex h-10 items-center justify-center rounded-md bg-atlas-cyan px-4 text-sm font-semibold text-black transition hover:bg-atlas-cyan/90"
+            >
+              Następny krok
+            </Link>
+            <Link
+              href="/ruchy-dnia"
+              className="inline-flex h-10 items-center justify-center rounded-md border border-atlas-border px-4 text-sm font-semibold text-atlas-primary transition hover:bg-atlas-hover"
+            >
+              Prowadź ruchy
+            </Link>
+          </div>
+        </AtlasPanel>
 
         <KpiStrip kpis={command.kpis} />
 

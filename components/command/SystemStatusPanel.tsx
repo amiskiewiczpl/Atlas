@@ -31,7 +31,7 @@ export function SystemStatusPanel({ day }: SystemStatusPanelProps) {
           <div className="flex items-center justify-between">
             <dt className="text-atlas-muted">Zamknięcie</dt>
             <dd className="font-medium text-atlas-primary">
-              {day?.zamkniety ? "zamknięty" : "otwarty"}
+              {day ? (day.zamkniety ? "zamknięty" : "otwarty") : "brak danych"}
             </dd>
           </div>
         </dl>

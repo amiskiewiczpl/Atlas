@@ -38,6 +38,13 @@ type QuestStatusUpdate = {
 type QuestyActionDb = {
   from(table: "sezony"): {
     select(columns: "id"): {
+      eq(column: "user_id", value: string): {
+        eq(column: "status", value: "aktywny"): {
+          order(column: "created_at", options: { ascending: true }): {
+            maybeSingle(): Promise<{ data: SeasonRow | null; error: { message: string } | null }>;
+          };
+        };
+      };
       eq(column: "status", value: "aktywny"): {
         order(column: "created_at", options: { ascending: true }): {
           maybeSingle(): Promise<{ data: SeasonRow | null; error: { message: string } | null }>;
@@ -47,10 +54,18 @@ type QuestyActionDb = {
   };
   from(table: "questy"): {
     select(columns: "id"): {
-      eq(column: "status", value: "aktywny"): Promise<{
-        data: ActiveQuestRow[] | null;
-        error: { message: string } | null;
-      }>;
+      eq(column: "user_id", value: string): {
+        eq(column: "status", value: "aktywny"): Promise<{
+          data: ActiveQuestRow[] | null;
+          error: { message: string } | null;
+        }>;
+      };
+      eq(column: "status", value: "aktywny"): {
+        eq(column: "user_id", value: string): Promise<{
+          data: ActiveQuestRow[] | null;
+          error: { message: string } | null;
+        }>;
+      };
     };
     insert(values: QuestInsert): Promise<{ error: { message: string } | null }>;
     update(values: QuestStatusUpdate): {
@@ -103,8 +118,12 @@ async function getCurrentUser() {
   return { supabase, user };
 }
 
-async function policzAktywneQuesty(db: QuestyActionDb, exceptQuestId?: string) {
-  const { data, error } = await db.from("questy").select("id").eq("status", "aktywny");
+async function policzAktywneQuesty(db: QuestyActionDb, userId: string, exceptQuestId?: string) {
+  const { data, error } = await db
+    .from("questy")
+    .select("id")
+    .eq("user_id", userId)
+    .eq("status", "aktywny");
 
   if (error) {
     throw new Error(error.message);
@@ -117,7 +136,7 @@ export async function dodajQuest(formData: FormData) {
   const { supabase, user } = await getCurrentUser();
   const db = supabase as unknown as QuestyActionDb;
 
-  const aktywneQuesty = await policzAktywneQuesty(db);
+  const aktywneQuesty = await policzAktywneQuesty(db, user.id);
 
   if (aktywneQuesty >= 3) {
     throw new Error("Limit: maksymalnie 3 aktywne questy.");
@@ -142,6 +161,7 @@ export async function dodajQuest(formData: FormData) {
   const { data: sezon, error: sezonError } = await db
     .from("sezony")
     .select("id")
+    .eq("user_id", user.id)
     .eq("status", "aktywny")
     .order("created_at", { ascending: true })
     .maybeSingle();
