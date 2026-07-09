@@ -4,7 +4,7 @@ import { WieczornyDebriefForm } from "@/components/debrief/WieczornyDebriefForm"
 import { RuchyDniaExecutionList } from "@/components/ruchy/RuchyDniaExecutionList";
 import { AtlasPanel } from "@/components/ui/AtlasPanel";
 import { getDzisiejszyDzien } from "@/lib/queries/dzien";
-import { getDzisiejszeRuchyDnia } from "@/lib/queries/ruchy-dnia";
+import { getDzisiejszeRuchyDnia, type RuchDniaListItem } from "@/lib/queries/ruchy-dnia";
 
 export const dynamic = "force-dynamic";
 
@@ -13,10 +13,12 @@ export default async function WieczornyDebriefPage() {
     getDzisiejszyDzien(),
     getDzisiejszeRuchyDnia()
   ]);
-  const zakonczone = ruchy.filter((ruch) =>
+  const zakonczone = (ruchy as RuchDniaListItem[]).filter((ruch) =>
     ["wykonany", "pominiety", "przeniesiony", "anulowany"].includes(ruch.status)
   ).length;
-  const wykonane = ruchy.filter((ruch) => ruch.status === "wykonany").length;
+  const wykonane = (ruchy as RuchDniaListItem[]).filter(
+    (ruch) => ruch.status === "wykonany"
+  ).length;
 
   return (
     <AppShell>

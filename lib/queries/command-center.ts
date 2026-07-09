@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 import type { Database } from "@/types/supabase";
 import type { RuchDniaListItem } from "@/lib/queries/ruchy-dnia";
 
@@ -138,8 +139,23 @@ function throwIfError(error: { message: string } | null) {
 }
 
 export async function getCommandCenterData(): Promise<CommandCenterData> {
-  const supabase = createClient() as unknown as CommandCenterDb;
+  const supabase = createClient();
   const dzisiaj = new Date().toISOString().slice(0, 10);
+
+  const {
+    data: { user },
+    error: userError
+  } = await supabase.auth.getUser();
+
+  if (userError) {
+    throw new Error(userError.message);
+  }
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const db = supabase as unknown as CommandCenterDb;
 
   const [
     missionResult,
@@ -152,18 +168,21 @@ export async function getCommandCenterData(): Promise<CommandCenterData> {
     supabase
       .from("misje")
       .select("id, nazwa, opis")
+      .eq("user_id", user.id)
       .eq("aktywna", true)
       .order("created_at", { ascending: true })
       .maybeSingle(),
     supabase
       .from("sezony")
       .select("id, nazwa, motyw, data_start, data_koniec, definicja_sukcesu")
+      .eq("user_id", user.id)
       .eq("status", "aktywny")
       .order("created_at", { ascending: true })
       .maybeSingle(),
     supabase
       .from("questy")
       .select("id, tytul, opis, postep, metryka_sukcesu, nastepna_akcja, bloker")
+      .eq("user_id", user.id)
       .eq("typ", "main")
       .eq("status", "aktywny")
       .order("created_at", { ascending: true })
@@ -173,11 +192,13 @@ export async function getCommandCenterData(): Promise<CommandCenterData> {
       .select(
         "id, data, tryb_dnia, readiness_score, focus_score, momentum_score, najwiekszy_progres, najwiekszy_bloker, zamkniety"
       )
+      .eq("user_id", user.id)
       .eq("data", dzisiaj)
       .maybeSingle(),
     supabase
       .from("ryzyka")
       .select("id, tytul, opis, powaga, rekomendowany_ruch")
+      .eq("user_id", user.id)
       .eq("status", "aktywne")
       .order("created_at", { ascending: true }),
     supabase
@@ -185,6 +206,7 @@ export async function getCommandCenterData(): Promise<CommandCenterData> {
       .select(
         "id, nazwa, jednostka, wartosc_aktualna, wartosc_docelowa, trend, status, regula_decyzyjna, kolejnosc"
       )
+      .eq("user_id", user.id)
       .eq("aktywne", true)
       .order("kolejnosc", { ascending: true })
   ]);
@@ -199,10 +221,12 @@ export async function getCommandCenterData(): Promise<CommandCenterData> {
   let dailyMoves: RuchDniaListItem[] = [];
 
   if (dayResult.data) {
+    const dayId = (dayResult.data as CommandDay).id;
     const movesResult = await supabase
       .from("ruchy_dnia")
       .select("id, tytul, typ, wplyw, wysilek, status, powod_pominiecia, kolejnosc")
-      .eq("dzien_id", dayResult.data.id)
+      .eq("user_id", user.id)
+      .eq("dzien_id", dayId)
       .order("kolejnosc", { ascending: true });
 
     throwIfError(movesResult.error);

@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 import type { Database } from "@/types/supabase";
 
 export type DomenaOption = {
@@ -17,41 +18,25 @@ export type RuchDniaListItem = {
   kolejnosc: number;
 };
 
-type RuchyDniaDb = {
-  from(table: "domeny"): {
-    select(columns: "id, nazwa"): {
-      eq(column: "aktywna", value: true): {
-        order(
-          column: "kolejnosc",
-          options: { ascending: true }
-        ): Promise<{ data: DomenaOption[] | null; error: { message: string } | null }>;
-      };
-    };
-  };
-  from(table: "dni"): {
-    select(columns: "id"): {
-      eq(column: "data", value: string): {
-        maybeSingle(): Promise<{ data: { id: string } | null; error: { message: string } | null }>;
-      };
-    };
-  };
-  from(table: "ruchy_dnia"): {
-    select(columns: "id, tytul, typ, wplyw, wysilek, status, powod_pominiecia, kolejnosc"): {
-      eq(column: "dzien_id", value: string): {
-        order(
-          column: "kolejnosc",
-          options: { ascending: true }
-        ): Promise<{ data: RuchDniaListItem[] | null; error: { message: string } | null }>;
-      };
-    };
-  };
-};
+export async function getAktywneDomeny(): Promise<DomenaOption[]> {
+  const supabase = createClient();
+  const {
+    data: { user },
+    error: userError
+  } = await supabase.auth.getUser();
 
-export async function getAktywneDomeny() {
-  const supabase = createClient() as unknown as RuchyDniaDb;
+  if (userError) {
+    throw new Error(userError.message);
+  }
+
+  if (!user) {
+    redirect("/login");
+  }
+
   const { data, error } = await supabase
     .from("domeny")
     .select("id, nazwa")
+    .eq("user_id", user.id)
     .eq("aktywna", true)
     .order("kolejnosc", { ascending: true });
 
@@ -62,12 +47,26 @@ export async function getAktywneDomeny() {
   return data ?? [];
 }
 
-export async function getDzisiejszeRuchyDnia() {
-  const supabase = createClient() as unknown as RuchyDniaDb;
+export async function getDzisiejszeRuchyDnia(): Promise<RuchDniaListItem[]> {
+  const supabase = createClient();
+  const {
+    data: { user },
+    error: userError
+  } = await supabase.auth.getUser();
+
+  if (userError) {
+    throw new Error(userError.message);
+  }
+
+  if (!user) {
+    redirect("/login");
+  }
+
   const dzisiaj = new Date().toISOString().slice(0, 10);
   const { data: dzien, error: dzienError } = await supabase
     .from("dni")
     .select("id")
+    .eq("user_id", user.id)
     .eq("data", dzisiaj)
     .maybeSingle();
 
@@ -79,10 +78,12 @@ export async function getDzisiejszeRuchyDnia() {
     return [];
   }
 
+  const dzienId = (dzien as { id: string }).id;
   const { data, error } = await supabase
     .from("ruchy_dnia")
     .select("id, tytul, typ, wplyw, wysilek, status, powod_pominiecia, kolejnosc")
-    .eq("dzien_id", dzien.id)
+    .eq("user_id", user.id)
+    .eq("dzien_id", dzienId)
     .order("kolejnosc", { ascending: true });
 
   if (error) {
